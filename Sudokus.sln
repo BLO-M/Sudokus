@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.AppHost", "Sudokus.AppHost\Sudokus.AppHost.csproj", "{822DDA39-AAB8-442D-9E61-EEEEAA1F730D}"
 EndProject
@@ -9,6 +9,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.ApiService", "Sudokus.ApiService\Sudokus.ApiService.csproj", "{0834D6F8-80FA-460D-BC7C-5CCC4A512767}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.Web", "Sudokus.Web\Sudokus.Web.csproj", "{125A94A5-229D-4C5A-971A-5D70AA85B677}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.GameLogic", "Sudoku.GameLogic\Sudoku.GameLogic.csproj", "{313226F4-B273-41F4-A00C-62F8D3BCF92B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{125A94A5-229D-4C5A-971A-5D70AA85B677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{125A94A5-229D-4C5A-971A-5D70AA85B677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{125A94A5-229D-4C5A-971A-5D70AA85B677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313226F4-B273-41F4-A00C-62F8D3BCF92B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313226F4-B273-41F4-A00C-62F8D3BCF92B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313226F4-B273-41F4-A00C-62F8D3BCF92B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313226F4-B273-41F4-A00C-62F8D3BCF92B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
