@@ -10,9 +10,10 @@
         private int? valor;
         public int? Valor => valor;
 
-        public bool esInicial { get; private set; }
+        private bool esInicial;
+        public bool EsInicial => esInicial;
 
-        private bool esCongruente;
+        internal bool esCongruente;
         public bool EsCongruente => esCongruente;
 
 
@@ -27,7 +28,7 @@
 
         public bool AsignarValor(int? nuevoValor)
         {
-            if (esInicial = true) return false;
+            if (esInicial == true) return false;
             if (nuevoValor is < 1 or > 9) return false;
             valor = nuevoValor;
             return true;
@@ -36,7 +37,10 @@
         public void BorrarValor()
         {
             if (!esInicial)
+            {
                 valor = null;
+                
+            }     
         }
     }
     
