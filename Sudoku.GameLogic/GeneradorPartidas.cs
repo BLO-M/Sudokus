@@ -8,33 +8,108 @@ namespace Sudoku.GameLogic
 {
     internal static class GeneradorPartidas
     {
+        private static Random rnd = new Random();
+        const int size = 9;
+
         public static int[,] GenerarSudoku()
         {
             int[,] tablero = new int[9,9];
+            //int MaxIntentosRellenar = 6;
+
+            RellenarBloques159(tablero); //Relleno libremente los bloques 1, 5 y 9 que no se afectan entre sí
+            RellenarTableroSaltando159(tablero, 0, 3);
+            
 
 
-            //Relleno libremente los bloques 1, 5 y 9 que no se afectan
+
+            return tablero;
+        }
+
+        private static void RellenarBloques159(int[,] tablero)
+        {
             List<int> numeros = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            Random rnd = new Random();
-            for (int fil = 0; fil < 9; fil++)
+            for (int fil = 0; fil < size; fil++)
             {
-                if (numeros.Count == 0) numeros = new List<int>{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                if (numeros.Count == 0) numeros = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 int col = fil / 3 * 3;
 
-                for (int i = 0; i < 3 ; col++, i++)
+                for (int i = 0; i < 3; col++, i++)
                 {
                     int num = rnd.Next(numeros.Count);
                     tablero[fil, col] = numeros[num];
                     numeros.RemoveAt(num);
                 }
             }
-            
+        }
+
+        private static bool RellenarTableroSaltando159(int[,] tablero, int fil, int col)
+        {
+            if (col >= size && fil < size - 1)
+            {
+                fil++;
+                col = 0;
+            }
+            if (fil >= size && col >= size)
+                return true;
+                
+            if (fil /3 == col / 3)
+            {
+                col += 3;
+                if (col >= size)
+                {
+                    if (fil == size - 1) return true;
+                    fil++;
+                    col = 0;
+                }
+            }
+
+            foreach (int num in NumerosMezclados())
+            {
+                if (NumEsValido(tablero, fil, col, num))
+                {
+                    tablero[fil, col] = num;
+
+                    if (RellenarTableroSaltando159(tablero, fil, col + 1))
+                        return true;
+
+                    tablero[fil, col] = 0; 
+                }
+            }
+            return false; //No se puede completar el sudoku, aunque al estar creandolo no va a pasar
+        }
+
+        private static List<int> NumerosMezclados()
+        {
+            List<int> numeros = new List<int>();
+            for(int i = 1; i <= 9; i++)
+                numeros.Add(i);
+
+            //Fisher-Yates, para "barajar"
+            for (int i = numeros.Count - 1; i > 0; i--)
+            {
+                int j = rnd.Next(i + 1);
+                (numeros[i], numeros[j]) = (numeros[j], numeros[i]);
+            }
+            return numeros;
+        }
 
 
+        private static bool NumEsValido(int[,] tablero, int fil, int col, int num)
+        {
+            for (int i = 0; i < size; i++)
+            {
+                if (tablero[fil, i] == num || tablero[i, col] == num)
+                    return false;
+            }
 
+            int filInicioBloque = fil - fil % 3;
+            int colInicioBlque = col - col % 3;
 
-
-            return tablero;
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    if (tablero[filInicioBloque + i, colInicioBlque + j] == num)
+                        return false;
+            return true;
         }
     }
 }
