@@ -11,7 +11,7 @@ namespace Sudoku.GameLogic
         private static Random rnd = new Random();
         const int size = 9;
 
-        public static int[,] GenerarSudoku()
+        public static int[,] GenerarSudokuCompletado()
         {
             int[,] tablero = new int[9,9];
             //int MaxIntentosRellenar = 6;
@@ -44,13 +44,15 @@ namespace Sudoku.GameLogic
 
         private static bool RellenarTableroSaltando159(int[,] tablero, int fil, int col)
         {
-            if (col >= size && fil < size - 1)
+            if (col >= size)
             {
                 fil++;
+
+                if (fil >= size)
+                    return true;
+
                 col = 0;
             }
-            if (fil >= size && col >= size)
-                return true;
                 
             if (fil /3 == col / 3)
             {
