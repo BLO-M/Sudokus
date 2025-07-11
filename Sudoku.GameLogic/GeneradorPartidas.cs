@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Sudoku.GameLogic
 {
+    //Para obtener un tableroCompleto llamar a GenerarSudokuCompletado() para obtener la matriz y luego
+    //llamar a Ocultador.TableroCasillasOcultas(tablero) para obtener el tablero con el que se jugará realmente
     internal static class GeneradorPartidas
     {
         private static Random rnd = new Random();
@@ -14,13 +16,9 @@ namespace Sudoku.GameLogic
         public static int[,] GenerarSudokuCompletado()
         {
             int[,] tablero = new int[9,9];
-            //int MaxIntentosRellenar = 6;
 
             RellenarBloques159(tablero); //Relleno libremente los bloques 1, 5 y 9 que no se afectan entre sí
             RellenarTableroSaltando159(tablero, 0, 3);
-            
-
-
 
             return tablero;
         }
