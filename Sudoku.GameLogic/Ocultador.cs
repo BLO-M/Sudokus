@@ -59,7 +59,7 @@ namespace Sudoku.GameLogic
             return true;
         }
 
-        public static List<(int, int)> ObtenerCoordenadasSudoku()
+        private static List<(int, int)> ObtenerCoordenadasSudoku()
         {
             return new List<(int, int)>
         {

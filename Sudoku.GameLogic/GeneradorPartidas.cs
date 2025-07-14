@@ -8,7 +8,7 @@ namespace Sudoku.GameLogic
 {
     //Para obtener un tableroCompleto llamar a GenerarSudokuCompletado() para obtener la matriz y luego
     //llamar a Ocultador.TableroCasillasOcultas(tablero) para obtener el tablero con el que se jugará realmente
-    internal static class GeneradorPartidas
+    public static class GeneradorPartidas
     {
         private static Random rnd = new Random();
         const int size = 9;

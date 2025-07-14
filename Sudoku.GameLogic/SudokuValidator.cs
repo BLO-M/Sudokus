@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Sudoku.GameLogic
 {
-    public static class SudokuValidator
+    internal static class SudokuValidator
     {
         const int size = 9;
         static int contador;
 
-        public static bool UnaSolaSolucion(int[,] tablero)
+        internal static bool UnaSolaSolucion(int[,] tablero)
         {
             contador = 0;
             //int[,] tableroPruebas = tableroOrig.Clone() as int[,];
