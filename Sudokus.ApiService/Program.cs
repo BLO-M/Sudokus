@@ -1,37 +1,41 @@
+using Sudoku.GameLogic;
+
 var builder = WebApplication.CreateBuilder(args);
-
-// Add service defaults & Aspire client integrations.
-builder.AddServiceDefaults();
-
-// Add services to the container.
-builder.Services.AddProblemDetails();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseExceptionHandler();
+var sesiones = new Dictionary<string, Partida>();
+const int size = 9;
 
-string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
+int[,]? tableroCompleto = null;
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/nuevo/{dificultad}", (int dificultad) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    tableroCompleto = GeneradorPartidas.GenerarSudokuCompletado();
+    var tableroOculto = Ocultador.TableroCasillasOcultas(tableroCompleto, dificultad);
+    return tableroOculto;
+});
 
-app.MapDefaultEndpoints();
+app.MapPost("/comprobar", (int[,] tableroActual) =>
+{
+    if (tableroCompleto == null)
+        return false;
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j < size; j++)
+        {
+            if (tableroActual[i, j] != tableroCompleto[i, j])
+                return false;
+        }
+    return true;
+});
+
+
+
+
+
+
+
+
+
+
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
