@@ -11,7 +11,4 @@
     <ProjectReference Include="..\Sudokus.ServiceDefaults\Sudokus.ServiceDefaults.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-  </ItemGroup>
-
 </Project>

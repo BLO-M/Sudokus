@@ -1,4 +1,5 @@
 using Sudoku.GameLogic;
+using Sudokus.ApiService.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -6,26 +7,36 @@ var app = builder.Build();
 var sesiones = new Dictionary<string, Partida>();
 const int size = 9;
 
-int[,]? tableroCompleto = null;
-
 app.MapGet("/nuevo/{dificultad}", (int dificultad) =>
 {
-    tableroCompleto = GeneradorPartidas.GenerarSudokuCompletado();
+    var idSesion = Guid.NewGuid().ToString();
+    
+    var tableroCompleto = GeneradorPartidas.GenerarSudokuCompletado();
     var tableroOculto = Ocultador.TableroCasillasOcultas(tableroCompleto, dificultad);
-    return tableroOculto;
+
+    Partida partida = new Partida(tableroOculto, tableroCompleto, dificultad);
+    sesiones.Add(idSesion, partida);
+
+    return Results.Json(new {idSesion, tableroOculto});
 });
 
-app.MapPost("/comprobar", (int[,] tableroActual) =>
+app.MapPost("/comprobar", (ComprobacionRequest IdYTableroActual) =>
 {
-    if (tableroCompleto == null)
-        return false;
-    for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
-        {
-            if (tableroActual[i, j] != tableroCompleto[i, j])
-                return false;
-        }
-    return true;
+    int[,] tableroActual = IdYTableroActual.TableroActual;
+    if (sesiones.TryGetValue(IdYTableroActual.IdSesion, out Partida? partida))
+    {
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+            {
+                if (tableroActual[i, j] != partida.Solucion[i, j])
+                    return Results.Ok(false);
+            }
+        return Results.Ok(true);
+    }
+    else
+    {
+        return Results.NotFound(new { error = "Sesión no encontrada" });
+    }
 });
 
 
