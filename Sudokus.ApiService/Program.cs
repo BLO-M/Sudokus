@@ -1,21 +1,30 @@
 using Sudoku.GameLogic;
 using Sudokus.ApiService.DTOs;
+using Sudokus.ApiService.Services;
+using System.Collections.Concurrent;
 
+var sesiones = new ConcurrentDictionary<string, Partida>();
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton(sesiones);
+builder.Services.AddHostedService<LimpiezaSesionesService>();
 var app = builder.Build();
 
-var sesiones = new Dictionary<string, Partida>();
 const int size = 9;
 
-app.MapGet("/nuevo/{dificultad}", (int dificultad) =>
-{
-    var idSesion = Guid.NewGuid().ToString();
-    
+app.MapPost("/nuevo/{dificultad}", (int dificultad) =>
+{   
     var tableroCompleto = GeneradorPartidas.GenerarSudokuCompletado();
     var tableroOculto = Ocultador.TableroCasillasOcultas(tableroCompleto, dificultad);
 
     Partida partida = new Partida(tableroOculto, tableroCompleto, dificultad);
-    sesiones.Add(idSesion, partida);
+
+    bool agregado;
+    string idSesion;
+    do
+    {
+        idSesion = Guid.NewGuid().ToString();
+        agregado = sesiones.TryAdd(idSesion, partida);
+    } while (!agregado);
 
     return Results.Json(new {idSesion, tableroOculto});
 });
@@ -39,10 +48,16 @@ app.MapPost("/comprobar", (ComprobacionRequest IdYTableroActual) =>
     }
 });
 
+app.MapPost("/usarPista", (PistaCasillaRequest IdyFilyCol) =>
+{
+    if (!sesiones.TryGetValue(IdyFilyCol.IdSesion, out Partida? partida))
+        return Results.NotFound(new { error = "Sesión no encontrada" });
 
-
-
-
+    if (Partida.usarPista(partida)) //Si quedan pistas disponibles
+        return Results.Ok(partida.Solucion[IdyFilyCol.fil, IdyFilyCol.col]);
+    else
+        return Results.Ok(false);
+});
 
 
 

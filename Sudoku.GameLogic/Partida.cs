@@ -31,11 +31,12 @@ public class Partida
         this.Dificultad = dificultad;
     }
 
-    public static void usarPista(Partida partida)
+    public static bool usarPista(Partida partida)
     {
         if (partida.PistasDisponibles <= 0) 
-            return;
+            return false;
 
         partida.PistasDisponibles--;
+        return true;
     }
 }
