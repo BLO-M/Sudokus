@@ -1,0 +1,56 @@
+﻿<h1>Sudoku</h1>
+
+<p>Partida actual: @idSesion</p>
+
+@if (tablero != null){
+    <table>
+        @for (int fil = 0; fil < 9; fil++)
+        {
+            <tr>
+                @for(int col = 0; col < 9; col++)
+                {
+                    <td>@tablero[fil, col]</td>
+                }
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>Error al cargar el tablero</p>
+}
+
+<select @onchange="OnDificultadChanged">
+    <option value="1" selected>Fácil</option>
+    <option value="2">Media</option>
+    <option value="3">Difícil</option>
+</select>
+<button id="btnNueva" @onclick="NuevaPartida">Nueva partida</button>
+<button id="btnCargar">Cargar partida</button>
+<button id="btnGuardar">Guardar partida</button>
+
+@code {
+    private String? idSesion;
+    private int[,]? tablero;
+    private int dificultad;
+
+    @inject HttpClient Http;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dificultad = 1;
+        await NuevaPartida();
+    }
+
+    private async Task NuevaPartida()
+    {
+        var response = await Http.GetFromJsonAsync<DTOs.NuevaPartidaResponse>($"/sudoku/nuevo/{dificultad}");
+        if (response == null) return; //Quizás redireccionar a una página de error
+        idSesion = response.IdSesion;
+        tablero = response.Tablero;
+    }
+
+    private void OnDificultadChanged(ChangeEventArgs e){
+        dificultad = int.Parse(e.Value!.ToString()!);
+    }
+}

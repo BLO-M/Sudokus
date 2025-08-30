@@ -14,15 +14,15 @@ namespace Sudoku.GameLogic
             Random rnd = new Random();
             switch (dificultad)
             {
-                case 1:
+                case 1: // Facil
                     if (OcultarCasillas(tableroOcultar, rnd.Next(30, 41)))
                         return tableroOcultar;
                     break;
-                case 2:
+                case 2: // Medio
                     if (OcultarCasillas(tableroOcultar, rnd.Next(41, 50)))
                         return tableroOcultar;
                     break;
-                case 3:
+                case 3: //Dificil
                     if (OcultarCasillas(tableroOcultar, rnd.Next(50, 55)))
                         return tableroOcultar;
                     break;
