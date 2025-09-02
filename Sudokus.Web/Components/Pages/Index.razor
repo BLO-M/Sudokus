@@ -12,8 +12,9 @@
                     @for(int col = 0; col < 9; col++)
                     {
                         bool esCeldaSelec = fil == filSelec && col == colSelec;
+                        bool esErronea = errores.ContainsKey((fil, col));
 
-                        <td class="@(esCeldaSelec ? "celdaSelec" : "")"
+                        <td class="@(esCeldaSelec ? "celdaSelec" : "") @(esErronea ? "celdaError" : "")"
                             @onclick="() => SeleccionarCelda(fil,col)">
                             @(tablero[fil, col] == 0 ? "" : tablero[fil, col].ToString());
                         </td>
@@ -41,6 +42,7 @@ else
     private String? idSesion;
     private byte[,]? tablero;
     private byte[,]? tableroInicial;
+    Dictionary<(int fila, int col), HashSet<(int fila, int col)>> errores = new(); // Para cada celda en conflicto, guarda las posiciones que causan conflicto
     private int dificultad;
     private int filSelec = -1;
     private int colSelec = -1;
@@ -53,18 +55,14 @@ else
         await NuevaPartida();
     }
 
-    private void ComprobarErrores(int fil, int col)
-    {
-        byte valor = tablero![fil, col];
-         
-    }
-
     private void PresionarTecla(KeyboardEventArgs e)
     {
         if (filSelec == -1) return;
         if (e.Key.Length == 1 && char.IsDigit(e.Key[0]))
         {
             byte valor = byte.Parse(e.Key);
+            if (valor == tablero![filSelec, colSelec]) return; // Si el mismo valor, nada
+
             if (valor >= 1 && valor <= 9)
             {
                 tablero![filSelec, colSelec] = valor;
@@ -73,10 +71,13 @@ else
             {
                 tablero![filSelec, colSelec] = 0; // Borrar el valor
             }
+            ComprobarErrores(filSelec, colSelec);
         }
         else if (e.Key == "Backspace" || e.Key == "Delete")
         {
+            if (tablero![filSelec, colSelec] == 0) return;
             tablero![filSelec, colSelec] = 0; // Borrar el valor
+            ComprobarErrores(filSelec, colSelec);
         }
         else if (e.Key == "ArrowUp")
         {
@@ -108,6 +109,85 @@ else
         }
     }
 
+    private void ComprobarErrores(int fil, int col)
+    {
+        byte valor = tablero![fil, col];
+        var celda = (fil, col);
+
+        if (errores.TryGetValue((celda), out var conflictos)) //El número ha cambiado, elimino conflictos previos
+        {
+            foreach (var coord in conflictos)
+            {
+                if (errores.TryGetValue(coord, out var set))
+                {
+                    set.Remove((celda));
+                    if (set.Count == 0)
+                        errores.Remove(coord);
+                }
+            }
+
+            if (valor == 0)
+            {
+                errores.Remove(celda);
+                return;
+            }
+
+            errores[celda].Clear();
+        } 
+        else
+        {
+            if (valor == 0) return;
+            errores.Add(celda, new HashSet<(int, int)>());
+        }
+
+        //Comprobar fila
+        for (int c = 0; c < 9; c++)
+        {
+            if (tablero[fil, c] == valor && c != col)
+            {
+                errores[celda].Add((fil, c));
+                if (tableroInicial![fil, c] == 0)
+                {
+                    errores.Add((fil, c), new HashSet<(int, int)>());
+                    errores[(fil, c)].Add(celda);
+                }
+            }
+        }
+
+        //Comprobar columna
+        for (int f = 0; f < 9; f++)
+        {
+            if (tablero[f, col] == valor && f != fil)
+            {
+                errores[celda].Add((f, col));
+                if (tableroInicial![f, col] == 0)
+                {
+                    errores.Add((f, col), new HashSet<(int, int)>());
+                    errores[(f, col)].Add(celda);
+                }
+            }
+        }
+
+        //Comprobar bloque
+        int filInicioBloque = fil - fil % 3;
+        int colInicioBlque = col - col % 3;
+
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (tablero[filInicioBloque + i, colInicioBlque + j] == valor && (filInicioBloque + i != fil || colInicioBlque + j != col))
+                {
+                    errores[celda].Add((filInicioBloque + i, colInicioBlque + j));
+                    if (tableroInicial![filInicioBloque + i, colInicioBlque + j] == 0)
+                    {
+                        errores.Add((filInicioBloque + i, colInicioBlque + j), new HashSet<(int, int)>());
+                        errores[(filInicioBloque + i, colInicioBlque + j)].Add(celda);
+                    }
+                }
+
+        if (errores[celda].Count == 0)
+            errores.Remove(celda);
+    }
+
     private void SeleccionarCelda(int fil, int col)
     {
         if (tableroInicial![fil, col] != 0)
@@ -137,6 +217,7 @@ else
         idSesion = response.IdSesion;
         tableroInicial = response.Tablero;
         ClonarTablero(); //Ref 1
+        StateHasChanged();
     }
 
     private void ClonarTablero()
