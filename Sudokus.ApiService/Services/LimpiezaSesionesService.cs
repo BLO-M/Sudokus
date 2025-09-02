@@ -16,7 +16,7 @@ namespace Sudokus.ApiService.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var limiteAntiguedad = DateTime.Now.AddDays(-6);
+                var limiteAntiguedad = DateTime.Now.AddDays(-1);
 
                 //Variable no tan agresiva como otras posibles.
                 var DiCaprio = sesiones

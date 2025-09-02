@@ -2,18 +2,26 @@
 
 <p>Partida actual: @idSesion</p>
 
-@if (tablero != null){
-    <table>
-        @for (int fil = 0; fil < 9; fil++)
-        {
-            <tr>
-                @for(int col = 0; col < 9; col++)
-                {
-                    <td>@tablero[fil, col]</td>
-                }
-            </tr>
-        }
-    </table>
+@if (tablero != null)
+{
+    <div tabindex="0" @onkeydown="PresionarTecla" @onfocusout="DeseleccionarCelda" style="outline:none;">
+        <table>
+            @for (int fil = 0; fil < 9; fil++)
+            {
+                <tr>
+                    @for(int col = 0; col < 9; col++)
+                    {
+                        bool esCeldaSelec = fil == filSelec && col == colSelec;
+
+                        <td class="@(esCeldaSelec ? "celdaSelec" : "")"
+                            @onclick="() => SeleccionarCelda(fil,col)">
+                            @(tablero[fil, col] == 0 ? "" : tablero[fil, col].ToString());
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
 }
 else
 {
@@ -32,7 +40,10 @@ else
 @code {
     private String? idSesion;
     private int[,]? tablero;
+    private int[,]? tableroInicial;
     private int dificultad;
+    private int filSelec = -1;
+    private int colSelec = -1;
 
     @inject HttpClient Http;
 
@@ -42,15 +53,101 @@ else
         await NuevaPartida();
     }
 
+    private void PresionarTecla(KeyboardEventArgs e)
+    {
+        if (filSelec == -1) return;
+        if (e.Key.Length == 1 && char.IsDigit(e.Key[0]))
+        {
+            int valor = int.Parse(e.Key);
+            if (valor >= 1 && valor <= 9)
+            {
+                tablero![filSelec, colSelec] = valor;
+            }
+            else if (valor == 0)
+            {
+                tablero![filSelec, colSelec] = 0; // Borrar el valor
+            }
+        }
+        else if (e.Key == "Backspace" || e.Key == "Delete")
+        {
+            tablero![filSelec, colSelec] = 0; // Borrar el valor
+        }
+        else if (e.Key == "ArrowUp")
+        {
+            do
+            {
+                filSelec = (filSelec + 8) % 9; // Mover hacia arriba
+            } while (tableroInicial![filSelec, colSelec] != 0); //No seleccionar iniciales
+    }
+        else if (e.Key == "ArrowDown")
+        {
+            do
+            {
+                filSelec = (filSelec + 1) % 9; // Mover hacia abajo
+            } while (tableroInicial![filSelec, colSelec] != 0); //No seleccionar iniciales
+    }
+        else if (e.Key == "ArrowLeft")
+        {
+            do
+            {
+                colSelec = (colSelec + 8) % 9; // Mover hacia la izquierda
+            } while (tableroInicial![filSelec, colSelec] != 0); //No seleccionar iniciales
+    }
+        else if (e.Key == "ArrowRight")
+        {
+            do
+            {
+                colSelec = (colSelec + 1) % 9; // Mover hacia la derecha
+            } while (tableroInicial![filSelec, colSelec] != 0); //No seleccionar iniciales
+        }
+    }
+
+    private void SeleccionarCelda(int fil, int col)
+    {
+        if (tableroInicial![fil, col] != 0)
+        {
+            DeseleccionarCelda();
+            return; //No se puede seleccionar una celda inicial
+        }
+        filSelec = fil;
+        colSelec = col;
+    }
+
+    private void DeseleccionarCelda()
+    {
+        filSelec = -1;
+        colSelec = -1;
+    }
+
+    private void OnDificultadChanged(ChangeEventArgs e)
+    {
+        dificultad = int.Parse(e.Value!.ToString()!);
+    }
+
     private async Task NuevaPartida()
     {
         var response = await Http.GetFromJsonAsync<DTOs.NuevaPartidaResponse>($"/sudoku/nuevo/{dificultad}");
         if (response == null) return; //Quizás redireccionar a una página de error
         idSesion = response.IdSesion;
-        tablero = response.Tablero;
+        tableroInicial = response.Tablero;
+        ClonarTablero(); //Ref 1
     }
 
-    private void OnDificultadChanged(ChangeEventArgs e){
-        dificultad = int.Parse(e.Value!.ToString()!);
+    private void ClonarTablero()
+    {
+        if (tableroInicial == null) return;
+        tablero = new int[9, 9];
+        for (int fil = 0; fil < 9; fil++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                tablero[fil, col] = tableroInicial[fil, col];
+            }
+        }
     }
+
+    /* -Ref 1: En un principio había creado las celdas como clases, pensé que era innecesario y pasé a trabajar directa y unicamente con
+        matrices, pero claro, desconocía como funcionaba Blazor... Creo que lo más óptimo sería tener la clase Celda, en este caso
+        solo para decir si esInicial o no, ahorraba la matriz tableroInicial y la función de ClonarTablero. Lección que me llevo.
+        */
 }
