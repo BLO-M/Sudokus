@@ -1,5 +1,5 @@
 ﻿namespace Sudokus.Web.Components.DTOs
 {
-    public record NuevaPartidaResponse(string IdSesion, int[,] Tablero);
+    public record NuevaPartidaResponse(string IdSesion, byte[,] Tablero);
 
 }

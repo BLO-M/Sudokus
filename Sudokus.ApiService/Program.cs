@@ -9,7 +9,7 @@ builder.Services.AddSingleton(sesiones);
 builder.Services.AddHostedService<LimpiezaSesionesService>();
 var app = builder.Build();
 
-const int size = 9;
+const byte size = 9;
 
 app.MapPost("/nuevo/{dificultad}", (int dificultad) =>
 {   
@@ -31,11 +31,11 @@ app.MapPost("/nuevo/{dificultad}", (int dificultad) =>
 
 app.MapPost("/comprobar", (ComprobacionRequest IdYTableroActual) =>
 {
-    int[,] tableroActual = IdYTableroActual.TableroActual;
+    byte[,] tableroActual = IdYTableroActual.TableroActual;
     if (sesiones.TryGetValue(IdYTableroActual.IdSesion, out Partida? partida))
     {
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
+        for (byte i = 0; i < size; i++)
+            for (byte j = 0; j < size; j++)
             {
                 if (tableroActual[i, j] != partida.Solucion[i, j])
                     return Results.Ok(false);

@@ -10,11 +10,11 @@ namespace Sudoku.GameLogic
     public static class GeneradorPartidas
     {
         private static Random rnd = new Random();
-        const int size = 9;
+        const byte size = 9;
 
-        public static int[,] GenerarSudokuCompletado()
+        public static byte[,] GenerarSudokuCompletado()
         {
-            int[,] tablero = new int[9,9];
+            byte[,] tablero = new byte[9,9];
 
             RellenarBloques159(tablero); //Relleno libremente los bloques 1, 5 y 9 que no se afectan entre sí
             RellenarTableroSaltando159(tablero, 0, 3);
@@ -22,12 +22,12 @@ namespace Sudoku.GameLogic
             return tablero;
         }
 
-        private static void RellenarBloques159(int[,] tablero)
+        private static void RellenarBloques159(byte[,] tablero)
         {
-            List<int> numeros = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            List<byte> numeros = new List<byte>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             for (int fil = 0; fil < size; fil++)
             {
-                if (numeros.Count == 0) numeros = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                if (numeros.Count == 0) numeros = new List<byte> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 int col = fil / 3 * 3;
 
                 for (int i = 0; i < 3; col++, i++)
@@ -39,7 +39,7 @@ namespace Sudoku.GameLogic
             }
         }
 
-        private static bool RellenarTableroSaltando159(int[,] tablero, int fil, int col)
+        private static bool RellenarTableroSaltando159(byte[,] tablero, int fil, int col)
         {
             if (col >= size)
             {
@@ -62,7 +62,7 @@ namespace Sudoku.GameLogic
                 }
             }
 
-            foreach (int num in NumerosMezclados())
+            foreach (byte num in NumerosMezclados())
             {
                 if (NumEsValido(tablero, fil, col, num))
                 {
@@ -77,10 +77,10 @@ namespace Sudoku.GameLogic
             return false; //No se puede completar el sudoku, aunque al estar creandolo no va a pasar
         }
 
-        private static List<int> NumerosMezclados()
+        private static List<byte> NumerosMezclados()
         {
-            List<int> numeros = new List<int>();
-            for(int i = 1; i <= 9; i++)
+            List<byte> numeros = new List<byte>();
+            for(byte i = 1; i <= 9; i++)
                 numeros.Add(i);
 
             //Fisher-Yates, para "barajar"
@@ -93,7 +93,7 @@ namespace Sudoku.GameLogic
         }
 
 
-        private static bool NumEsValido(int[,] tablero, int fil, int col, int num)
+        private static bool NumEsValido(byte[,] tablero, int fil, int col, int num)
         {
             for (int i = 0; i < size; i++)
             {

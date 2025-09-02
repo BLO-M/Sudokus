@@ -39,8 +39,8 @@ else
 
 @code {
     private String? idSesion;
-    private int[,]? tablero;
-    private int[,]? tableroInicial;
+    private byte[,]? tablero;
+    private byte[,]? tableroInicial;
     private int dificultad;
     private int filSelec = -1;
     private int colSelec = -1;
@@ -53,12 +53,18 @@ else
         await NuevaPartida();
     }
 
+    private void ComprobarErrores(int fil, int col)
+    {
+        byte valor = tablero![fil, col];
+         
+    }
+
     private void PresionarTecla(KeyboardEventArgs e)
     {
         if (filSelec == -1) return;
         if (e.Key.Length == 1 && char.IsDigit(e.Key[0]))
         {
-            int valor = int.Parse(e.Key);
+            byte valor = byte.Parse(e.Key);
             if (valor >= 1 && valor <= 9)
             {
                 tablero![filSelec, colSelec] = valor;
@@ -136,7 +142,7 @@ else
     private void ClonarTablero()
     {
         if (tableroInicial == null) return;
-        tablero = new int[9, 9];
+        tablero = new byte[9, 9];
         for (int fil = 0; fil < 9; fil++)
         {
             for (int col = 0; col < 9; col++)

@@ -8,9 +8,17 @@ namespace Sudoku.GameLogic
 {
     public static class Ocultador
     {
-        public static int[,] TableroCasillasOcultas(int[,] tablero, int dificultad)
+        public static byte[,] TableroCasillasOcultas(byte[,] tablero, int dificultad)
         {
-            int[,] tableroOcultar = (int[,])tablero.Clone();
+            byte[,] tableroOcultar = new byte[9,9];
+            for (byte fil = 0; fil < 9; fil++)
+            {
+                for (byte col = 0; col < 9; col++)
+                {
+                    tableroOcultar[fil, col] = tablero[fil, col];
+                }
+            }
+
             Random rnd = new Random();
             switch (dificultad)
             {
@@ -30,11 +38,12 @@ namespace Sudoku.GameLogic
             return TableroCasillasOcultas(tablero, dificultad);
         }
 
-        private static bool OcultarCasillas(int[,] tablero, int CasillasOcultar)
+        private static bool OcultarCasillas(byte[,] tablero, int CasillasOcultar)
         {
             var coordenadas = ObtenerCoordenadasSudoku();
             Random rnd = new Random();
-            int r, numOcultado;
+            int r;
+            byte numOcultado;
             int i = 0;
             while (i < CasillasOcultar)
             {
@@ -59,9 +68,9 @@ namespace Sudoku.GameLogic
             return true;
         }
 
-        private static List<(int, int)> ObtenerCoordenadasSudoku()
+        private static List<(byte, byte)> ObtenerCoordenadasSudoku()
         {
-            return new List<(int, int)>
+            return new List<(byte, byte)>
         {
             (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8),
             (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8),

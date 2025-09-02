@@ -8,10 +8,10 @@ namespace Sudoku.GameLogic
 {
     internal static class SudokuValidator
     {
-        const int size = 9;
+        const byte size = 9;
         static int contador;
 
-        internal static bool UnaSolaSolucion(int[,] tablero)
+        internal static bool UnaSolaSolucion(byte[,] tablero)
         {
             contador = 0;
             //int[,] tableroPruebas = tableroOrig.Clone() as int[,];
@@ -19,7 +19,7 @@ namespace Sudoku.GameLogic
             return contador == 1;
         }
 
-        private static void ComprobacionUnaSolaSolucion(int[,] tablero, int fil, int col)
+        private static void ComprobacionUnaSolaSolucion(byte[,] tablero, int fil, int col)
         {
             if (col >= size)
             {
@@ -51,7 +51,7 @@ namespace Sudoku.GameLogic
                 }
             }
 
-            for (int i = 1; i <= 9; i++)
+            for (byte i = 1; i <= 9; i++)
             {
                 if (NumEsValido(tablero, fil, col, i))
                 {
@@ -63,7 +63,7 @@ namespace Sudoku.GameLogic
             return;
         }
 
-        private static bool NumEsValido(int[,] tablero, int fil, int col, int num)
+        private static bool NumEsValido(byte[,] tablero, int fil, int col, byte num)
         {
             for (int i = 0; i < size; i++)
             {

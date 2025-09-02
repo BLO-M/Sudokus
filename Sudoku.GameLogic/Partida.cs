@@ -2,13 +2,13 @@
 
 public class Partida
 {
-    public int[,] TableroJuego { get; set; }
-    public int[,] Solucion { get; set; }
+    public byte[,] TableroJuego { get; set; }
+    public byte[,] Solucion { get; set; }
     public int PistasDisponibles { get; private set; }
     public DateTime HoraCreacion { get; }
     public int Dificultad { get; }
 
-    public Partida(int[,] tableroJuego, int[,] solucion, int dificultad) //Partidas Nuevas
+    public Partida(byte[,] tableroJuego, byte[,] solucion, int dificultad) //Partidas Nuevas
     {
         this.TableroJuego = tableroJuego;
         this.Solucion = solucion;
@@ -22,7 +22,7 @@ public class Partida
         }
     }
 
-    public Partida(int[,] tableroJuego, int[,] solucion, int pistasDisponibles, int dificultad) //Partidas cargadas
+    public Partida(byte[,] tableroJuego, byte[,] solucion, int pistasDisponibles, int dificultad) //Partidas cargadas
     {
         this.TableroJuego = tableroJuego;
         this.Solucion = solucion;
