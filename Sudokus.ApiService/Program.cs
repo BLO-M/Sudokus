@@ -2,6 +2,7 @@ using Sudoku.GameLogic;
 using Sudokus.ApiService.DTOs;
 using Sudokus.ApiService.Services;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
 
 var sesiones = new ConcurrentDictionary<string, Partida>();
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,8 @@ app.MapPost("/nuevo/{dificultad}", (int dificultad) =>
         agregado = sesiones.TryAdd(idSesion, partida);
     } while (!agregado);
 
-    return Results.Json(new {idSesion, tableroOculto});
+    //return Results.Json(new {idSesion, tableroOculto}); System.Text.Json no funciona con [,], por no cambiar todo a [][] uso Newtonsoft para serializar y deserializar
+    return Results.Content(JsonConvert.SerializeObject(new { idSesion, tableroOculto }), "application/json");
 });
 
 app.MapPost("/comprobar", (ComprobacionRequest IdYTableroActual) =>

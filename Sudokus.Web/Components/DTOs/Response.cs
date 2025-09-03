@@ -1,5 +1,7 @@
-﻿namespace Sudokus.Web.Components.DTOs
+﻿using Newtonsoft.Json;
+
+namespace Sudokus.Web.Components.DTOs
 {
-    public record NuevaPartidaResponse(string IdSesion, byte[,] Tablero);
+    public record NuevaPartidaResponse(string IdSesion, [property: JsonProperty("tableroOculto")] byte[,] Tablero);
 
 }

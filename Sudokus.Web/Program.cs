@@ -9,10 +9,21 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Detecta la URL del backend según entorno
+var apiUrl = Environment.GetEnvironmentVariable("SUDOKU_API_URL");
+
+// Si no hay variable, asumimos Aspire y usamos el nombre del servicio con esquema válido
+if (string.IsNullOrWhiteSpace(apiUrl))
+    apiUrl = "https://apiservice"; // Aspire resolverá el nombre del servicio
+
+// Validación extra: si la URL no es válida, lanza excepción clara
+if (!Uri.TryCreate(apiUrl, UriKind.Absolute, out var baseUri))
+    throw new InvalidOperationException($"La URL para el backend no es válida: {apiUrl}");
+
 // Registramos el cliente HTTP para llamar al backend
 builder.Services.AddHttpClient("SudokuApi", client =>
 {
-    client.BaseAddress = new Uri("https+http://apiservice");
+    client.BaseAddress = baseUri;
 });
 
 var app = builder.Build();
