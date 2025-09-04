@@ -40,9 +40,9 @@ else
     <option value="2">Media</option>
     <option value="3">Difícil</option>
 </select>
-<button id="btnNueva" @onclick="NuevaPartida">Nueva partida</button>
-<button id="btnCargar">Cargar partida</button>
-<button id="btnGuardar">Guardar partida</button>
+<button type="button" id="btnNueva" @onclick="NuevaPartida">Nueva partida</button>
+<button type="button" id="btnCargar">Cargar partida</button>
+<button type="button" id="btnGuardar">Guardar partida</button>
 
 @code {
     private HttpClient Http => HttpClientFactory.CreateClient("SudokuApi");

@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Sudokus.ServiceDefaults\Sudokus.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
 </Project>
