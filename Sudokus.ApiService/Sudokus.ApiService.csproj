@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sudoku.GameLogic\Sudoku.GameLogic.csproj" />
-    <ProjectReference Include="..\Sudokus.ServiceDefaults\Sudokus.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

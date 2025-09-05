@@ -69,8 +69,4 @@ app.MapPost("/usarPista", (PistaCasillaRequest IdyFilyCol) =>
 });
 
 
-
-
-
-
 app.Run();

@@ -3,7 +3,7 @@ using Sudokus.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
+// builder.AddServiceDefaults(); //No necesito cookies
 
 // Agregamos Razor Components para el frontend interactivo
 builder.Services.AddRazorComponents()
@@ -36,10 +36,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseAntiforgery(); // Protección contra CSRF
+// app.UseAntiforgery(); // Protección contra CSRF No quiero cookies
 
 // Mapeo de componentes Razor
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .DisableAntiforgery();
 
 app.Run();

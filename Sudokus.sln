@@ -5,8 +5,6 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.AppHost", "Sudokus.AppHost\Sudokus.AppHost.csproj", "{822DDA39-AAB8-442D-9E61-EEEEAA1F730D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.ServiceDefaults", "Sudokus.ServiceDefaults\Sudokus.ServiceDefaults.csproj", "{DFF7F15B-7CB7-4853-AA6F-973B5F7F1B1C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.ApiService", "Sudokus.ApiService\Sudokus.ApiService.csproj", "{0834D6F8-80FA-460D-BC7C-5CCC4A512767}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudokus.Web", "Sudokus.Web\Sudokus.Web.csproj", "{125A94A5-229D-4C5A-971A-5D70AA85B677}"
@@ -23,10 +21,6 @@ Global
 		{822DDA39-AAB8-442D-9E61-EEEEAA1F730D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{822DDA39-AAB8-442D-9E61-EEEEAA1F730D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{822DDA39-AAB8-442D-9E61-EEEEAA1F730D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFF7F15B-7CB7-4853-AA6F-973B5F7F1B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFF7F15B-7CB7-4853-AA6F-973B5F7F1B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFF7F15B-7CB7-4853-AA6F-973B5F7F1B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFF7F15B-7CB7-4853-AA6F-973B5F7F1B1C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0834D6F8-80FA-460D-BC7C-5CCC4A512767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0834D6F8-80FA-460D-BC7C-5CCC4A512767}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0834D6F8-80FA-460D-BC7C-5CCC4A512767}.Release|Any CPU.ActiveCfg = Release|Any CPU
