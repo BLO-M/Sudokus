@@ -48,3 +48,12 @@ td {
 select {
     font-size: 15px;
 }
+
+.sudokuFinalizado {
+    border-color: green;
+}
+
+#textofinPartida {
+    font-size: 33px;
+    color: green;
+}

@@ -31,10 +31,17 @@ app.MapPost("/nuevo/{dificultad}", (int dificultad) =>
     return Results.Content(JsonConvert.SerializeObject(new { idSesion, tableroOculto }), "application/json");
 });
 
-app.MapPost("/comprobar", (ComprobacionRequest IdYTableroActual) =>
-{
-    byte[,] tableroActual = IdYTableroActual.TableroActual;
-    if (sesiones.TryGetValue(IdYTableroActual.IdSesion, out Partida? partida))
+app.MapPost("/comprobarRespuesta", async (HttpContext context) =>
+{   //Lee el cuerpo como string
+    var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+    //Newtonsoft.Json deserializa
+    var request = JsonConvert.DeserializeObject<ComprobacionRequest>(requestBody);
+
+    if (request == null)
+        return Results.BadRequest(new { error = "Request inválido" });
+
+    byte[,] tableroActual = request.TableroActual;
+    if (sesiones.TryGetValue(request.IdSesion, out Partida? partida))
     {
         for (byte i = 0; i < size; i++)
             for (byte j = 0; j < size; j++)
