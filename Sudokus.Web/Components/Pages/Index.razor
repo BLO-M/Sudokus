@@ -7,7 +7,7 @@
 
 <h1>Sudoku</h1>
 
-<p>Partida actual: @idSesion</p>
+<p><span id="PartidaActual">Partida actual:</span> <span id="IdPartida">@idSesion</span></p>
 
 @if (tablero != null)
 {
@@ -15,16 +15,19 @@
         <table>
             @for (int fil = 0; fil < 9; fil++)
             {
-                <tr>
+                int filActual = fil;
+                <tr> <!--Añadirle borde por arriba para delimitar bloque-->
                     @for(int col = 0; col < 9; col++)
                     {
                         bool esCeldaSelec = fil == filSelec && col == colSelec;
                         bool esErronea = errores.ContainsKey((fil, col));
-                        int filActual = fil;
                         int colActual = col;
 
-                        <td class="@(esCeldaSelec ? "celdaSelec" : "") @(esErronea ? "celdaError" : "")"
+                        <td class="@(esCeldaSelec ? "celdaSelec" : "") @(tableroInicial?[filActual, colActual] == 0 ? "noInicial" : "Inicial") 
+                            @(esErronea ? "celdaError" : "") 
+                            @(filActual % 3 ==0 ? "limiteFilaBloque" : "" ) @(colActual % 3 == 0 ? "limiteColBloque" : "")"
                             @onclick="() => SeleccionarCelda(filActual,colActual)">
+
                             @(tablero[fil, col] == 0 ? "" : tablero[fil, col].ToString())
                         </td>
                     }
@@ -35,7 +38,7 @@
 }
 else
 {
-    <p>Error al cargar el tablero</p>
+    <p id="errorCargaTablero">Error al cargar el tablero</p>
 }
 
 <select @onchange="OnDificultadChanged">
@@ -148,7 +151,7 @@ else
         else
         {
             if (valor == 0) return;
-            errores.Add(celda, new HashSet<(int, int)>());
+            errores.TryAdd(celda, new HashSet<(int, int)>());
         }
 
         //Comprobar fila
@@ -159,7 +162,7 @@ else
                 errores[celda].Add((fil, c));
                 if (tableroInicial![fil, c] == 0)
                 {
-                    errores.Add((fil, c), new HashSet<(int, int)>());
+                    errores.TryAdd((fil, c), new HashSet<(int, int)>());
                     errores[(fil, c)].Add(celda);
                 }
             }
@@ -173,7 +176,7 @@ else
                 errores[celda].Add((f, col));
                 if (tableroInicial![f, col] == 0)
                 {
-                    errores.Add((f, col), new HashSet<(int, int)>());
+                    errores.TryAdd((f, col), new HashSet<(int, int)>());
                     errores[(f, col)].Add(celda);
                 }
             }
